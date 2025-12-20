@@ -1,0 +1,42 @@
+name: Test Supabase Connection
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-connection:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          pip install supabase
+      
+      - name: Test Supabase connection
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          python -c "
+          import os
+          from supabase import create_client
+          
+          url = os.environ.get('SUPABASE_URL')
+          key = os.environ.get('SUPABASE_KEY')
+          
+          print(f'Testing connection to: {url}')
+          
+          supabase = create_client(url, key)
+          result = supabase.table('exercises').select('*').limit(3).execute()
+          
+          print(f'✅ SUCCESS! Found {len(result.data)} exercises:')
+          for ex in result.data:
+              print(f'  - {ex[\"name\"]}')
+          "
