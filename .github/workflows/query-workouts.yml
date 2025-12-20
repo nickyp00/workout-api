@@ -1,0 +1,56 @@
+name: Query Workouts
+
+on:
+  workflow_dispatch:
+    inputs:
+      query_type:
+        description: 'Type of query (max_weight, volume, history)'
+        required: true
+        type: string
+      exercise_name:
+        description: 'Exercise name (optional)'
+        required: false
+        type: string
+      days_back:
+        description: 'Number of days to look back'
+        required: false
+        type: string
+        default: '90'
+      additional_params:
+        description: 'Additional parameters as JSON'
+        required: false
+        type: string
+        default: '{}'
+
+jobs:
+  query-workouts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r scripts/requirements.txt
+      
+      - name: Query database
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          QUERY_TYPE: ${{ inputs.query_type }}
+          EXERCISE_NAME: ${{ inputs.exercise_name }}
+          DAYS_BACK: ${{ inputs.days_back }}
+          ADDITIONAL_PARAMS: ${{ inputs.additional_params }}
+        run: |
+          python scripts/query_workouts.py
+      
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: query-result
+          path: results/query_result.json
