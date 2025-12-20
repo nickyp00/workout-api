@@ -1,26 +1,9 @@
-name: Query Workouts
+name: Process Query Request
 
 on:
-  workflow_dispatch:
-    inputs:
-      query_type:
-        description: 'Type of query (max_weight, volume, history)'
-        required: true
-        type: string
-      exercise_name:
-        description: 'Exercise name (optional)'
-        required: false
-        type: string
-      days_back:
-        description: 'Number of days to look back'
-        required: false
-        type: string
-        default: '90'
-      additional_params:
-        description: 'Additional parameters as JSON'
-        required: false
-        type: string
-        default: '{}'
+  push:
+    paths:
+      - 'requests/query_*.json'
 
 jobs:
   query-workouts:
@@ -28,6 +11,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -38,19 +23,17 @@ jobs:
         run: |
           pip install -r scripts/requirements.txt
       
-      - name: Query database
+      - name: Process query requests
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-          QUERY_TYPE: ${{ inputs.query_type }}
-          EXERCISE_NAME: ${{ inputs.exercise_name }}
-          DAYS_BACK: ${{ inputs.days_back }}
-          ADDITIONAL_PARAMS: ${{ inputs.additional_params }}
         run: |
-          python scripts/query_workouts.py
+          python scripts/process_queries.py
       
-      - name: Upload results
-        uses: actions/upload-artifact@v3
-        with:
-          name: query-result
-          path: results/query_result.json
+      - name: Commit results
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add results/*.json
+          git diff --quiet && git diff --staged --quiet || git commit -m "Add query results [skip ci]"
+          git push
