@@ -1,25 +1,9 @@
-name: Add Workout
+name: Process Workout Request
 
 on:
-  workflow_dispatch:
-    inputs:
-      exercise_name:
-        description: 'Exercise name (e.g., bench press)'
-        required: true
-        type: string
-      sets_data:
-        description: 'Sets data as JSON array'
-        required: true
-        type: string
-      weight_type:
-        description: 'Weight type'
-        required: false
-        type: string
-        default: 'barbell'
-      notes:
-        description: 'Workout notes'
-        required: false
-        type: string
+  push:
+    paths:
+      - 'requests/workout_*.json'
 
 jobs:
   add-workout:
@@ -27,6 +11,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -37,19 +23,17 @@ jobs:
         run: |
           pip install -r scripts/requirements.txt
       
-      - name: Add workout to database
+      - name: Process workout requests
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-          EXERCISE_NAME: ${{ inputs.exercise_name }}
-          SETS_DATA: ${{ inputs.sets_data }}
-          WEIGHT_TYPE: ${{ inputs.weight_type }}
-          NOTES: ${{ inputs.notes }}
         run: |
-          python scripts/add_workout.py
+          python scripts/process_workouts.py
       
-      - name: Upload results
-        uses: actions/upload-artifact@v3
-        with:
-          name: workout-result
-          path: results/latest.json
+      - name: Commit results
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add results/*.json
+          git diff --quiet && git diff --staged --quiet || git commit -m "Add workout results [skip ci]"
+          git push
