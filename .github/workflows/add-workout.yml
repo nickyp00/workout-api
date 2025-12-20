@@ -1,0 +1,55 @@
+name: Add Workout
+
+on:
+  workflow_dispatch:
+    inputs:
+      exercise_name:
+        description: 'Exercise name (e.g., bench press)'
+        required: true
+        type: string
+      sets_data:
+        description: 'Sets data as JSON array'
+        required: true
+        type: string
+      weight_type:
+        description: 'Weight type'
+        required: false
+        type: string
+        default: 'barbell'
+      notes:
+        description: 'Workout notes'
+        required: false
+        type: string
+
+jobs:
+  add-workout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r scripts/requirements.txt
+      
+      - name: Add workout to database
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          EXERCISE_NAME: ${{ inputs.exercise_name }}
+          SETS_DATA: ${{ inputs.sets_data }}
+          WEIGHT_TYPE: ${{ inputs.weight_type }}
+          NOTES: ${{ inputs.notes }}
+        run: |
+          python scripts/add_workout.py
+      
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: workout-result
+          path: results/latest.json
