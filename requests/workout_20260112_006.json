@@ -1,0 +1,10 @@
+{
+  "exercise": "dumbbell tricep extension",
+  "sets": [
+    {"weight": 12, "reps": 15},
+    {"weight": 20, "reps": 15},
+    {"weight": 24, "reps": 15}
+  ],
+  "weight_type": "dumbbell",
+  "notes": "Chest and triceps workout"
+}
