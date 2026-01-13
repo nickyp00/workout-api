@@ -1,0 +1,10 @@
+{
+  "exercise": "push-ups",
+  "sets": [
+    {"weight": 0, "reps": 15},
+    {"weight": 0, "reps": 15},
+    {"weight": 0, "reps": 15}
+  ],
+  "weight_type": "none",
+  "notes": "Chest and triceps workout"
+}

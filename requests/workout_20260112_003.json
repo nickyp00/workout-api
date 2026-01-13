@@ -1,0 +1,10 @@
+{
+  "exercise": "incline dumbbell press",
+  "sets": [
+    {"weight": 70, "reps": 11},
+    {"weight": 80, "reps": 11},
+    {"weight": 80, "reps": 11}
+  ],
+  "weight_type": "dumbbell",
+  "notes": "Chest and triceps workout"
+}

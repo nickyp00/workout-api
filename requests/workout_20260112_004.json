@@ -1,0 +1,10 @@
+{
+  "exercise": "skull crusher",
+  "sets": [
+    {"weight": 25, "reps": 11},
+    {"weight": 45, "reps": 11},
+    {"weight": 45, "reps": 11}
+  ],
+  "weight_type": "ez bar",
+  "notes": "Chest and triceps workout"
+}
