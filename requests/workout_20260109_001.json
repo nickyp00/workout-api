@@ -1,0 +1,10 @@
+{
+  "exercise": "seated cable row",
+  "sets": [
+    {"weight": 75, "reps": 11},
+    {"weight": 90, "reps": 11},
+    {"weight": 105, "reps": 11}
+  ],
+  "weight_type": "machine",
+  "notes": "Back and biceps workout. Failed last rep on set 3"
+}

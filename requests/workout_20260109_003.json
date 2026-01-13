@@ -1,0 +1,10 @@
+{
+  "exercise": "hex bar deadlift",
+  "sets": [
+    {"weight": 95, "reps": 11},
+    {"weight": 115, "reps": 11},
+    {"weight": 115, "reps": 11}
+  ],
+  "weight_type": "hex bar",
+  "notes": "Back and biceps workout"
+}

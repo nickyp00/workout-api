@@ -1,0 +1,8 @@
+{
+  "exercise": "dumbbell hammer curl",
+  "sets": [
+    {"weight": 40, "reps": 15}
+  ],
+  "weight_type": "dumbbell",
+  "notes": "Back and biceps workout"
+}

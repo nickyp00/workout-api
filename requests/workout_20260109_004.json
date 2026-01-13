@@ -1,0 +1,10 @@
+{
+  "exercise": "lat pulldown",
+  "sets": [
+    {"weight": 80, "reps": 12},
+    {"weight": 90, "reps": 11},
+    {"weight": 90, "reps": 11}
+  ],
+  "weight_type": "machine",
+  "notes": "Back and biceps workout"
+}
